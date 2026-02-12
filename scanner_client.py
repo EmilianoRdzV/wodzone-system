@@ -36,7 +36,8 @@ def main():
                     limpiar_pantalla()
                     print("=========================================")
                     print(f"✅ BIENVENIDO: {data.get('name')}")
-                    print(f"🔥 RACHA ACTUAL: {data.get('streak')} DÍAS")
+                    print(f"🔥 RACHA ACTUAL: {data.get('streakCurrent')} DÍAS")
+                    print(f"🔥 NOMBRE RACHA ACTUAL: {data.get('streakName')}")
                     print("=========================================")
                     print("\n(Esperando siguiente miembro...)")
                     

@@ -10,6 +10,9 @@ class Member(models.Model):
     # Datos de la Racha
     current_streak = models.IntegerField(default=0, verbose_name="Racha Actual")
     last_checkin = models.DateField(null=True, blank=True, verbose_name="Última Visita")
+
+    #fecha de mensualidad
+    mensuality_date = models.DateField(null=True, blank=True, verbose_name="Mensualidad")
     
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -49,3 +52,11 @@ class Member(models.Model):
         self.save()
 
         return True, "Check-in Exitoso"
+    
+class Streaks(models.Model):
+    nameStreak = models.CharField(max_length=100, verbose_name="Nombre Racha")
+    daysStreak = models.IntegerField(default=0, verbose_name="Dias totales")
+
+    def __str__(self):
+        return f"{self.nameStreak} ({self.daysStreak} días)"
+    
