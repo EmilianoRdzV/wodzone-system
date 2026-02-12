@@ -7,20 +7,26 @@ class CheckInView(APIView):
     def post(self, request):
         qr = request.data.get('qr_code')
         
-        # Validar que enviaron algo
         if not qr:
             return Response({"error": "Falta código QR"}, status=400)
 
         try:
-            # Buscar miembro
             member = Member.objects.get(qr_code=qr)
             
-            # Ejecutar lógica de racha (del Sprint 2)
             success, msg = member.process_checkin()
-            
-            # Responder al escáner
+
+            # 🔴 Si no fue exitoso (ya vino hoy)
+            if not success:
+                return Response({
+                    "success": False,
+                    "error": msg,
+                    "name": member.name,
+                    "streak": member.current_streak
+                }, status=400)
+
+            # 🟢 Si fue exitoso
             return Response({
-                "success": success,
+                "success": True,
                 "message": msg,
                 "name": member.name,
                 "streak": member.current_streak
