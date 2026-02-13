@@ -3,6 +3,10 @@ from rest_framework.response import Response
 from rest_framework import status
 from .models import Member
 from .models import Streaks
+from django.shortcuts import render
+
+def home(request):
+    return render(request, 'index.html')
 
 class CheckInView(APIView):
     def post(self, request):
