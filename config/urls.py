@@ -5,6 +5,4 @@ from django.contrib import admin
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('core.urls')), # <--- Aquí conectamos tu app
-    path('admin/', admin.site.urls),
-    path('', include('core.urls')),
 ]

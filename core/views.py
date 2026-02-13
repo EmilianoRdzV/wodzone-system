@@ -1,3 +1,4 @@
+from datetime import timedelta, timezone
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -35,6 +36,11 @@ class CheckInView(APIView):
             if streakNow: 
                     nombre_racha = streakNow.nameStreak
 
+            #Hacemos el calculo para la fecha de vigencia de la mensualidad
+            fechaMensualidad = member.mensuality_date
+            nuevamensualidad = fechaMensualidad + timedelta(days=30) 
+
+
             # 🟢 Si fue exitoso
             return Response({
                 "success": True,
@@ -42,6 +48,7 @@ class CheckInView(APIView):
                 "name": member.name,
                 "streakCurrent": member.current_streak,
                 "streakName": nombre_racha,
+                "expireDate":  nuevamensualidad,
             }, status=200)
 
         except Member.DoesNotExist:

@@ -38,6 +38,7 @@ def main():
                     print(f"✅ BIENVENIDO: {data.get('name')}")
                     print(f"🔥 RACHA ACTUAL: {data.get('streakCurrent')} DÍAS")
                     print(f"🔥 NOMBRE RACHA ACTUAL: {data.get('streakName')}")
+                    print(f"🔥 NOMBRE RACHA ACTUAL: {data.get('expireDate')}")
                     print("=========================================")
                     print("\n(Esperando siguiente miembro...)")
                     

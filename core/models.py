@@ -9,7 +9,7 @@ class Member(models.Model):
     
     # Datos de la Racha
     current_streak = models.IntegerField(default=0, verbose_name="Racha Actual")
-    last_checkin = models.DateField(null=True, blank=True, verbose_name="Última Visita")
+    last_checkin = models.DateTimeField(null=True, blank=True, verbose_name="Última Visita")
 
     #fecha de mensualidad
     mensuality_date = models.DateField(null=True, blank=True, verbose_name="Mensualidad")
@@ -20,35 +20,26 @@ class Member(models.Model):
         return f"{self.name} ({self.current_streak} días)"
 
     def process_checkin(self):
-        """
-        Calcula si la racha continúa o se rompe.
-        Ignora Sábados (5) y Domingos (6).
-        """
-        today = timezone.localdate()
-        
-        # 1. Evitar doble check-in
-        if self.last_checkin == today:
+        now = timezone.localtime(timezone.now())  # fecha y hora locales
+        today = now.date()  # solo para comparar fechas si quieres
+
+        # Evitar doble check-in usando solo fecha
+        if self.last_checkin and self.last_checkin.date() == today:
             return False, "Ya registraste visita hoy"
 
-        # 2. Calcular el día anterior esperado
-        # Si es Lunes (0), debió venir el Viernes (3 días atrás)
-        # Si es cualquier otro día, debió venir ayer (1 día atrás)
+        # Calcular el día anterior esperado
         weekday = today.weekday()
         days_back = 3 if weekday == 0 else 1
         expected_prev = today - timedelta(days=days_back)
 
-        # 3. Evaluar Racha
-        maintained = False
-        # Si vino el día esperado O si es su primera vez
-        if self.last_checkin == expected_prev or self.last_checkin is None:
+        # Evaluar racha
+        if self.last_checkin and self.last_checkin.date() == expected_prev:
             self.current_streak += 1
-            maintained = True
         else:
-            # Rompió la racha, reinicia a 1 (hoy cuenta)
-            self.current_streak = 1 
+            self.current_streak = 1  # rompe racha
 
-        # 4. Guardar
-        self.last_checkin = today
+        # Guardar fecha y hora reales
+        self.last_checkin = now
         self.save()
 
         return True, "Check-in Exitoso"
