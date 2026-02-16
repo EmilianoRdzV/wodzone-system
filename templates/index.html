@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>WOD Zone - Bienvenido</title>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: white;
+            overflow: hidden;
+
+            /* Imagen más iluminada */
+            background: 
+                linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.65)),
+                url('https://images.unsplash.com/photo-1599058917765-a780eda07a3e') no-repeat center center/cover;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 900px;
+            padding: 70px;
+            background-color: rgba(0, 0, 0, 54%); /* más sólido */
+            border-radius: 12px;
+        }
+
+        .logo img {
+            max-width: 220px;
+            opacity: 0.95;
+        }
+
+        h1 {
+            font-size: 85px;
+            margin: 0;
+            font-weight: 700;
+            letter-spacing: 6px;
+        }
+
+        .subtitle {
+            font-size: 68px;
+            margin-top: 40px;
+            font-weight: bold;
+            letter-spacing: 3px;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .subtitle2 {
+            font-size: 68px;
+            margin-top: 15px;
+            letter-spacing: 3px;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .subtitle1 {
+            font-size: 22px;
+            margin-top: 40px;
+            letter-spacing: 3px;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .divider {
+            width: 70px;
+            height: 3px;
+            background-color: rgba(180, 0, 0, 0.8);
+            margin: 35px auto;
+        }
+
+        .date {
+            font-size: 28px;
+            margin-bottom: 20px;
+            color: rgba(255,255,255,0.85);
+        }
+        .date1 {
+            font-size: 28px;
+            margin-bottom: 20px;
+            font-weight: 700;
+            color: rgba(180, 0, 0, 0.8);
+        }
+
+        .legend {
+            font-size: 20px;
+            letter-spacing: 2px;
+            margin-top: 30px;
+            color: rgba(255,255,255,0.85);
+            text-transform: uppercase;
+        }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 50px; }
+            .subtitle { font-size: 20px; }
+            .date { font-size: 18px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <div class="logo">
+             <img src="{% static 'images/WodZone2.png' %}" alt="Logo">
+        </div>
+
+        <div class="subtitle2">
+            BIENVENIDO
+        </div>
+        <div class="subtitle">
+            TORTITA
+        </div>
+        <div class="subtitle1">
+            WOD ZONE SYSTEM
+        </div>
+
+        <div class="divider"></div>
+        <div class="date">Tu mensualidad vence el:</div>
+        <div class="date1" id="fecha"></div>
+
+        <div class="legend">
+            Stronger Every Day • No Excuses
+        </div>
+        
+    </div>
+    
+    <script>
+        const fecha = new Date();
+        const opciones = { year: 'numeric', month: 'long', day: 'numeric' };
+        document.getElementById("fecha").innerHTML =
+            fecha.toLocaleDateString("es-ES", opciones);
+    </script>
+
+</body>
+</html>
