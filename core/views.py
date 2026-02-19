@@ -1,13 +1,34 @@
-from datetime import timedelta, timezone
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from .models import Member
 from .models import Streaks
+from datetime import timedelta
+from django.utils import timezone
 from django.shortcuts import render
 
 def home(request):
     return render(request, 'index.html')
+
+def calculaMensualidad(member):
+    hoy = timezone.now().date()
+    fmensualidad = member
+
+    if not fmensualidad:
+        return hoy
+
+    diferencia = hoy - fmensualidad
+    if diferencia.days > 31:
+        return hoy
+ 
+    nmensualidad = fmensualidad + timedelta(days=31)
+    return nmensualidad
+
+def muestraInfo(request, qr):
+    member = Member.objects.get(qr_code=qr)
+    expdate = calculaMensualidad(member.mensuality_date)
+    return render(request, 'index.html', {'member': member, 'fechaexp': expdate})
+
 
 class CheckInView(APIView):
     def post(self, request):
@@ -36,10 +57,7 @@ class CheckInView(APIView):
             if streakNow: 
                     nombre_racha = streakNow.nameStreak
 
-            #Hacemos el calculo para la fecha de vigencia de la mensualidad
-            fechaMensualidad = member.mensuality_date
-            nuevamensualidad = fechaMensualidad + timedelta(days=30) 
-
+            #muestraInfo(request, qr)
 
             # 🟢 Si fue exitoso
             return Response({
@@ -48,7 +66,6 @@ class CheckInView(APIView):
                 "name": member.name,
                 "streakCurrent": member.current_streak,
                 "streakName": nombre_racha,
-                "expireDate":  nuevamensualidad,
             }, status=200)
 
         except Member.DoesNotExist:

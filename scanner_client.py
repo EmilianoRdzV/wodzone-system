@@ -1,6 +1,8 @@
 import requests
 import os
 import time
+import webbrowser
+
 
 # En producción (Gym), esto seguirá siendo localhost si corren en la misma máquina.
 API_URL = "http://127.0.0.1:8000/api/checkin/"
@@ -32,16 +34,19 @@ def main():
                 response = requests.post(API_URL, json={'qr_code': qr_code})
                 
                 if response.status_code == 200:
+                    qr_code = qr_code  # el mismo que escaneaste
+                    
                     data = response.json()
                     limpiar_pantalla()
                     print("=========================================")
                     print(f"✅ BIENVENIDO: {data.get('name')}")
                     print(f"🔥 RACHA ACTUAL: {data.get('streakCurrent')} DÍAS")
                     print(f"🔥 NOMBRE RACHA ACTUAL: {data.get('streakName')}")
-                    print(f"🔥 Tu mensualidad vence el: {data.get('expireDate')}")
                     print("=========================================")
                     print("\n(Esperando siguiente miembro...)")
                     
+                    url = f"http://127.0.0.1:8000/memberinfo/{qr_code}/"
+                    webbrowser.open(url)
                     # Sonido de éxito (solo Windows)
                     # print('\a') 
                 else:

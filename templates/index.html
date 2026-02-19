@@ -100,6 +100,7 @@
         }
     </style>
 </head>
+{% block content%}
 <body>
 
     <div class="container">
@@ -112,7 +113,7 @@
             BIENVENIDO
         </div>
         <div class="subtitle">
-            TORTITA
+            {{member.name}}
         </div>
         <div class="subtitle1">
             WOD ZONE SYSTEM
@@ -120,20 +121,14 @@
 
         <div class="divider"></div>
         <div class="date">Tu mensualidad vence el:</div>
-        <div class="date1" id="fecha"></div>
+        <div class="date1">{{fechaexp}}</div>
 
         <div class="legend">
             Stronger Every Day • No Excuses
         </div>
         
     </div>
-    
-    <script>
-        const fecha = new Date();
-        const opciones = { year: 'numeric', month: 'long', day: 'numeric' };
-        document.getElementById("fecha").innerHTML =
-            fecha.toLocaleDateString("es-ES", opciones);
-    </script>
 
 </body>
+{% endblock %}
 </html>
