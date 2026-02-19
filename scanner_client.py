@@ -1,7 +1,7 @@
 import requests
 import os
 import time
-import webbrowser
+from selenium import webdriver
 
 
 # En producción (Gym), esto seguirá siendo localhost si corren en la misma máquina.
@@ -18,8 +18,11 @@ def main():
     print("=========================================")
     print("\nEsperando lectura del escáner...")
 
+    driver = webdriver.Chrome()
+
     while True:
         try:
+            
             # El escáner actúa como teclado y da ENTER al final
             qr_code = input("\n>> ESCANEAR AHORA: ")
 
@@ -45,8 +48,8 @@ def main():
                     print("=========================================")
                     print("\n(Esperando siguiente miembro...)")
                     
-                    url = f"http://127.0.0.1:8000/memberinfo/{qr_code}/"
-                    webbrowser.open(url)
+                    driver.get(f"http://127.0.0.1:8000/memberinfo/{qr_code}/")
+
                     # Sonido de éxito (solo Windows)
                     # print('\a') 
                 else:
