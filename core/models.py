@@ -11,7 +11,7 @@ class Member(models.Model):
     current_streak = models.IntegerField(default=0, verbose_name="Racha Actual")
     last_checkin = models.DateTimeField(null=True, blank=True, verbose_name="Última Visita")
 
-    #fecha de mensualidad
+    #fechas de mensualidad
     mensuality_date = models.DateField(null=True, blank=True, verbose_name="Mensualidad")
     
     created_at = models.DateTimeField(auto_now_add=True)
@@ -45,9 +45,9 @@ class Member(models.Model):
         return True, "Check-in Exitoso"
     
     def saveNDateM(self, m):
-        self.last_checkin = m
+        self.mensuality_date = m
         self.save()
-        return True,
+        return True
     
 class Streaks(models.Model):
     nameStreak = models.CharField(max_length=100, verbose_name="Nombre Racha")
