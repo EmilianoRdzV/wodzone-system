@@ -23,10 +23,17 @@ class Member(models.Model):
         now = timezone.localtime(timezone.now())  # fecha y hora locales
         today = now.date()  # solo para comparar fechas si quieres
 
-        if self.last_checkin:
-            diff = (today - self.last_checkin.date()).days
+        #SI EL ULTIMO CHECK ES EN VIERNES Y REGISTRA EL LUNES LA RACHA SIGUE
+        #SI PASAN MAS DE 3 DIAS LA RACHA SE ROMPE SOLO PARA FINES DE SEMANA
+        #ENTRE SEMANA SOLO PERMITE FALTAR 1 DIA, SI PASAN MAS DE DOS SE REINICIA.
 
-        if diff <= 3:
+        diff = (today - self.last_checkin.date()).days
+        last_day = self.last_checkin.weekday()
+
+        weekend_case = last_day == 4 and diff <= 3
+        weekday_case = diff <= 2
+
+        if weekend_case or weekday_case:
             self.current_streak += 1
         else:
             self.current_streak = 1
