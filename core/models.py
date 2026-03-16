@@ -23,20 +23,13 @@ class Member(models.Model):
         now = timezone.localtime(timezone.now())  # fecha y hora locales
         today = now.date()  # solo para comparar fechas si quieres
 
-        # Evitar doble check-in usando solo fecha
-        if self.last_checkin and self.last_checkin.date() == today:
-            return False, "Ya registraste visita hoy"
+        if self.last_checkin:
+            diff = (today - self.last_checkin.date()).days
 
-        # Calcular el día anterior esperado
-        weekday = today.weekday()
-        days_back = 3 if weekday == 0 else 1
-        expected_prev = today - timedelta(days=days_back)
-
-        # Evaluar racha
-        if self.last_checkin and self.last_checkin.date() == expected_prev:
+        if diff <= 3:
             self.current_streak += 1
         else:
-            self.current_streak = 1  # rompe racha
+            self.current_streak = 1
 
         # Guardar fecha y hora reales
         self.last_checkin = now
@@ -47,7 +40,7 @@ class Member(models.Model):
     def saveNDateM(self, m):
         self.mensuality_date = m
         self.save()
-        return True
+        
     
 class Streaks(models.Model):
     nameStreak = models.CharField(max_length=100, verbose_name="Nombre Racha")

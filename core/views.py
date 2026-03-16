@@ -24,17 +24,28 @@ def calculaMensualidad(mensualidad, qr):
 
     if diffMensualidad.days >= 31:
         nmensualidad = hoy
-        member.saveNDateM(mensualidad)
+        member.saveNDateM(nmensualidad)
 
     if diffMensualidad.days < 31: 
         nmensualidad = mensualidad + timedelta(days=31)
 
     return nmensualidad
 
+def buscaRacha(dStreak):
+    dayS = Streaks.objects.filter(daysStreak=dStreak).first()
+    if dayS:
+        return dayS.nameStreak
+    else:
+        return ""
+    return nStreak
+
 def muestraInfo(request, qr):
     member = Member.objects.get(qr_code=qr)
     expdate = calculaMensualidad(member.mensuality_date, member.qr_code)
-    return render(request, 'index.html', {'member': member, 'fechaexp': expdate})
+    streak = buscaRacha(member.current_streak)
+    showModal = True
+    if streak is None or streak == "": showModal = False
+    return render(request, 'index.html', {'member': member, 'fechaexp': expdate, 'streak': streak, 'showmodal': showModal})
 
 
 class CheckInView(APIView):
