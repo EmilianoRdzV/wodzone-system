@@ -10,23 +10,30 @@ from django.shortcuts import render
 def home(request):
     return render(request, 'index.html')
 
-def calculaMensualidad(member):
+def calculaMensualidad(mensualidad, qr):
+    member = Member.objects.get(qr_code=qr)
     hoy = timezone.now().date()
-    fmensualidad = member
+    nmensualidad = None
 
-    if not fmensualidad:
-        return hoy
+    #PREMISAS
+    #LA MENSUALIDAD SE COBRA POR 31 DIAS(MES)
+    #EL BOX ABRE 6 DIAS A LA SEMANA
+    #DIAS HABILIDES DE ENTRENAMIENTO 24
 
-    diferencia = hoy - fmensualidad
-    if diferencia.days > 31:
-        return hoy
- 
-    nmensualidad = fmensualidad + timedelta(days=31)
+    diffMensualidad = hoy - mensualidad
+
+    if diffMensualidad.days >= 31:
+        nmensualidad = hoy
+        member.saveNDateM(mensualidad)
+
+    if diffMensualidad.days < 31: 
+        nmensualidad = mensualidad + timedelta(days=31)
+
     return nmensualidad
 
 def muestraInfo(request, qr):
     member = Member.objects.get(qr_code=qr)
-    expdate = calculaMensualidad(member.mensuality_date)
+    expdate = calculaMensualidad(member.mensuality_date, member.qr_code)
     return render(request, 'index.html', {'member': member, 'fechaexp': expdate})
 
 

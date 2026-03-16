@@ -44,6 +44,11 @@ class Member(models.Model):
 
         return True, "Check-in Exitoso"
     
+    def saveNDateM(self, m):
+        self.last_checkin = m
+        self.save()
+        return True,
+    
 class Streaks(models.Model):
     nameStreak = models.CharField(max_length=100, verbose_name="Nombre Racha")
     daysStreak = models.IntegerField(default=0, verbose_name="Dias totales")
