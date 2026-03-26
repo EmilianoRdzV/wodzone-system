@@ -1,8 +1,7 @@
 from django.urls import path
-from .views import CheckInView
-from . import views
+from .views import CheckInView, MemberInfoView
 
 urlpatterns = [
     path('checkin/', CheckInView.as_view()),
-    path('', views.home, name='home'),
+    path('member/<str:qr>/', MemberInfoView.as_view()),
 ]
