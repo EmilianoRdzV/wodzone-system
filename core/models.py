@@ -11,7 +11,7 @@ class Member(models.Model):
     current_streak = models.IntegerField(default=0, verbose_name="Racha Actual")
     last_checkin = models.DateTimeField(null=True, blank=True, verbose_name="Última Visita")
 
-    #fecha de mensualidad
+    #fechas de mensualidad
     mensuality_date = models.DateField(null=True, blank=True, verbose_name="Mensualidad")
     
     created_at = models.DateTimeField(auto_now_add=True)
@@ -23,26 +23,31 @@ class Member(models.Model):
         now = timezone.localtime(timezone.now())  # fecha y hora locales
         today = now.date()  # solo para comparar fechas si quieres
 
-        # Evitar doble check-in usando solo fecha
-        if self.last_checkin and self.last_checkin.date() == today:
-            return False, "Ya registraste visita hoy"
+        #SI EL ULTIMO CHECK ES EN VIERNES Y REGISTRA EL LUNES LA RACHA SIGUE
+        #SI PASAN MAS DE 3 DIAS LA RACHA SE ROMPE SOLO PARA FINES DE SEMANA
+        #ENTRE SEMANA SOLO PERMITE FALTAR 1 DIA, SI PASAN MAS DE DOS SE REINICIA.
 
-        # Calcular el día anterior esperado
-        weekday = today.weekday()
-        days_back = 3 if weekday == 0 else 1
-        expected_prev = today - timedelta(days=days_back)
+        diff = (today - self.last_checkin.date()).days
+        last_day = self.last_checkin.weekday()
 
-        # Evaluar racha
-        if self.last_checkin and self.last_checkin.date() == expected_prev:
+        weekend_case = last_day == 4 and diff <= 3
+        weekday_case = diff <= 2
+
+        if weekend_case or weekday_case:
             self.current_streak += 1
         else:
-            self.current_streak = 1  # rompe racha
+            self.current_streak = 1
 
         # Guardar fecha y hora reales
         self.last_checkin = now
         self.save()
 
         return True, "Check-in Exitoso"
+    
+    def saveNDateM(self, m):
+        self.mensuality_date = m
+        self.save()
+        
     
 class Streaks(models.Model):
     nameStreak = models.CharField(max_length=100, verbose_name="Nombre Racha")

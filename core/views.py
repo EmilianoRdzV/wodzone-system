@@ -1,13 +1,52 @@
-from datetime import timedelta, timezone
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from .models import Member
 from .models import Streaks
+from datetime import timedelta
+from django.utils import timezone
 from django.shortcuts import render
 
 def home(request):
     return render(request, 'index.html')
+
+def calculaMensualidad(mensualidad, qr):
+    member = Member.objects.get(qr_code=qr)
+    hoy = timezone.now().date()
+    nmensualidad = None
+
+    #PREMISAS
+    #LA MENSUALIDAD SE COBRA POR 31 DIAS(MES)
+    #EL BOX ABRE 6 DIAS A LA SEMANA
+    #DIAS HABILIDES DE ENTRENAMIENTO 24
+
+    diffMensualidad = hoy - mensualidad
+
+    if diffMensualidad.days >= 31:
+        nmensualidad = hoy
+        member.saveNDateM(nmensualidad)
+
+    if diffMensualidad.days < 31: 
+        nmensualidad = mensualidad + timedelta(days=31)
+
+    return nmensualidad
+
+def buscaRacha(dStreak):
+    dayS = Streaks.objects.filter(daysStreak=dStreak).first()
+    if dayS:
+        return dayS.nameStreak
+    else:
+        return ""
+    return nStreak
+
+def muestraInfo(request, qr):
+    member = Member.objects.get(qr_code=qr)
+    expdate = calculaMensualidad(member.mensuality_date, member.qr_code)
+    streak = buscaRacha(member.current_streak)
+    showModal = True
+    if streak is None or streak == "": showModal = False
+    return render(request, 'index.html', {'member': member, 'fechaexp': expdate, 'streak': streak, 'showmodal': showModal})
+
 
 class CheckInView(APIView):
     def post(self, request):
@@ -36,10 +75,7 @@ class CheckInView(APIView):
             if streakNow: 
                     nombre_racha = streakNow.nameStreak
 
-            #Hacemos el calculo para la fecha de vigencia de la mensualidad
-            fechaMensualidad = member.mensuality_date
-            nuevamensualidad = fechaMensualidad + timedelta(days=30) 
-
+            #muestraInfo(request, qr)
 
             # 🟢 Si fue exitoso
             return Response({
@@ -48,7 +84,6 @@ class CheckInView(APIView):
                 "name": member.name,
                 "streakCurrent": member.current_streak,
                 "streakName": nombre_racha,
-                "expireDate":  nuevamensualidad,
             }, status=200)
 
         except Member.DoesNotExist:

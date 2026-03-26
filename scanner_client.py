@@ -1,6 +1,8 @@
 import requests
 import os
 import time
+from selenium import webdriver
+
 
 # En producción (Gym), esto seguirá siendo localhost si corren en la misma máquina.
 API_URL = "http://127.0.0.1:8000/api/checkin/"
@@ -16,8 +18,11 @@ def main():
     print("=========================================")
     print("\nEsperando lectura del escáner...")
 
+    driver = webdriver.Chrome()
+
     while True:
         try:
+            
             # El escáner actúa como teclado y da ENTER al final
             qr_code = input("\n>> ESCANEAR AHORA: ")
 
@@ -32,16 +37,19 @@ def main():
                 response = requests.post(API_URL, json={'qr_code': qr_code})
                 
                 if response.status_code == 200:
+                    qr_code = qr_code  # el mismo que escaneaste
+                    
                     data = response.json()
                     limpiar_pantalla()
                     print("=========================================")
                     print(f"✅ BIENVENIDO: {data.get('name')}")
                     print(f"🔥 RACHA ACTUAL: {data.get('streakCurrent')} DÍAS")
                     print(f"🔥 NOMBRE RACHA ACTUAL: {data.get('streakName')}")
-                    print(f"🔥 NOMBRE RACHA ACTUAL: {data.get('expireDate')}")
                     print("=========================================")
                     print("\n(Esperando siguiente miembro...)")
                     
+                    driver.get(f"http://127.0.0.1:8000/memberinfo/{qr_code}/")
+
                     # Sonido de éxito (solo Windows)
                     # print('\a') 
                 else:
