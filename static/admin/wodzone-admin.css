@@ -1,0 +1,121 @@
+/* ===== WodZone Admin — Fix inputs & dark theme ===== */
+
+/* Inputs, textareas, selects — fondo oscuro, texto blanco */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+input[type="date"],
+input[type="tel"],
+input[type="url"],
+textarea,
+select,
+.vTextField,
+.vDateField,
+.vTimeField {
+    background-color: #1a1a1a !important;
+    color: #f0f0f0 !important;
+    border: 1px solid #3a3a3a !important;
+    border-radius: 4px !important;
+    padding: 8px 12px !important;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="number"]:focus,
+input[type="date"]:focus,
+textarea:focus,
+select:focus {
+    border-color: #cc0000 !important;
+    outline: none !important;
+    box-shadow: 0 0 0 2px rgba(204, 0, 0, 0.2) !important;
+}
+
+/* Placeholder */
+input::placeholder,
+textarea::placeholder {
+    color: #666 !important;
+}
+
+/* Select dropdown options */
+select option {
+    background-color: #1a1a1a !important;
+    color: #f0f0f0 !important;
+}
+
+/* Help text */
+.help, p.help {
+    color: #999 !important;
+    font-size: 12px !important;
+}
+
+/* Readonly fields */
+.readonly {
+    color: #aaa !important;
+    background: transparent !important;
+}
+
+/* Fieldset legends */
+fieldset h2, fieldset legend {
+    color: #cc0000 !important;
+    font-weight: 700 !important;
+    letter-spacing: 2px !important;
+    text-transform: uppercase !important;
+    font-size: 13px !important;
+}
+
+/* Form rows */
+.form-row {
+    border-bottom: 1px solid #1f1f1f !important;
+}
+
+/* Labels */
+label {
+    color: #ccc !important;
+    font-weight: 500 !important;
+}
+
+/* Required star */
+.required label::after,
+label.required::after {
+    color: #cc0000 !important;
+}
+
+/* Date picker calendar icon */
+.calendarlink, .clocklink {
+    color: #cc0000 !important;
+}
+
+/* Submit buttons */
+input[type="submit"],
+.submit-row input {
+    background: #cc0000 !important;
+    color: white !important;
+    border: none !important;
+    font-weight: 700 !important;
+    letter-spacing: 1px !important;
+    text-transform: uppercase !important;
+}
+
+input[type="submit"]:hover {
+    background: #ff1a1a !important;
+}
+
+/* Delete button */
+.submit-row a.deletelink {
+    color: #ff6666 !important;
+}
+
+/* List display badge colors already in admin.py */
+
+/* Search bar */
+#searchbar {
+    background: #1a1a1a !important;
+    color: #f0f0f0 !important;
+    border: 1px solid #333 !important;
+}
+
+/* Checkbox */
+input[type="checkbox"] {
+    accent-color: #cc0000 !important;
+}
